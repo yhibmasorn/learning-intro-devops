@@ -16,21 +16,30 @@ pipeline{
 
         stage('Build'){
             steps{
-                script {
-                    // Define your image name and tag
-                    def imageTag = "latest"
-                    def fullImageName = "${DOCKER_IMAGE}:${imageTag}"
-
-                    // Step 1: Remove the old image if it exists
-                    // 'docker images -q' gets the image ID for the specified image name and tag
-                    sh(script: "docker images -q ${fullImageName} | xargs -r docker rmi", returnStatus: true)
-
-                    // Step 2: Build the new image
-                    sh "docker build -t ${fullImageName} ."
+                script{
+                    docker.build("$DOCKER_IMAGE:latest")
                 }
 
             }
 
+        }
+
+        stage('Deploy'){
+            step{
+                script{
+                    sh 'docker stop my-nestjs-app || true'
+                    sh 'docker rm my-nestjs-app || true'
+                    sh 'docker run -d --name my-nestjs-app -p 3000:3000 $DOCKER_IMAGE:latest'
+                }
+
+            }
+        }
+
+    }
+
+    post{
+        always{
+            echo 'Pipeline execution complete.'
         }
 
     }

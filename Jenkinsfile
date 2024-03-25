@@ -24,22 +24,6 @@ pipeline{
 
         }
 
-        stage('Deploy'){
-            steps{
-                script{
-                    sh 'docker stop my-nestjs-app || true'
-                }
-
-            }
-        }
-
-    }
-
-    post{
-        always{
-            echo 'Pipeline execution complete.'
-        }
-
     }
 
 }

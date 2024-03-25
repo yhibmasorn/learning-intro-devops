@@ -6,6 +6,19 @@ pipeline{
     }
 
     stages{
+        stage('Prepare'){
+            steps{
+                script{
+                     if (isUnix()) {
+                        sh 'nohup command > output.log 2>&1 &'
+                    } else {
+                        bat 'start /B command > output.log 2>&1'
+                    }
+                }
+            }
+
+        }
+
         stage('Checkout'){
             steps{
                 checkout scm

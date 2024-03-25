@@ -25,7 +25,7 @@ pipeline{
         }
 
         stage('Deploy'){
-            step{
+            steps{
                 script{
                     sh 'docker stop my-nestjs-app || true'
                     sh 'docker rm my-nestjs-app || true'

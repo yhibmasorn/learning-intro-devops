@@ -28,8 +28,6 @@ pipeline{
             steps{
                 script{
                     sh 'docker stop my-nestjs-app || true'
-                    sh 'docker rm my-nestjs-app || true'
-                    sh 'docker run --name my-nestjs-app -p 3000:3000 $DOCKER_IMAGE:latest'
                 }
 
             }

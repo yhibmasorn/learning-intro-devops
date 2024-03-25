@@ -1,0 +1,26 @@
+pipeline{
+    agent any
+    environment {
+        DOCKER_IMAGE = 'nestjs-app'
+
+    }
+
+    stages{
+        stage('Checkout'){
+            steps{
+                checkout scm
+
+            }
+
+        }
+
+    }
+
+    post{
+        always{
+            echo 'Pipeline execution complete.'
+        }
+
+    }
+
+}

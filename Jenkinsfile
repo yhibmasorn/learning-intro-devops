@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment {
-        DOCKER_IMAGE = 'gcr.io/yhibmasorn/NestJS-API:${BUILD_NUMBER}'
+        DOCKER_IMAGE = 'gcr.io/yhibmasorn/nestsj-api:${BUILD_NUMBER}'
 
     }
 

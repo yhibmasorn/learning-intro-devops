@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment {
-        DOCKER_IMAGE = 'nestjs-app'
+        DOCKER_IMAGE = 'gcr.io/YhibMaSorn/NestJS-API:${BUILD_NUMBER}'
 
     }
 
@@ -14,10 +14,12 @@ pipeline{
 
         }
 
-        stage('Build'){
+        stage('Build and Push Image'){
             steps{
                 script{
-                    docker.build("$DOCKER_IMAGE:latest")
+                    sh "docker build -t ${DOCKER_IMAGE}"
+                    sh "gcloud auth configure-docker"
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
 
             }
@@ -27,9 +29,9 @@ pipeline{
         stage('Deploy'){
             steps{
                 script{
-                    sh 'docker stop my-nestjs-app || true'
-                    sh 'docker rm my-nestjs-app || true'
-                    sh 'docker run -d --name my-nestjs-app -p 3000:3000 $DOCKER_IMAGE:latest'
+                    def serviceName = "NestJS-API-Service"
+                    def region = "us-central1
+                    sh "gcloud run deploy ${serviceName} --image ${DOCKER_IMAGE} --region ${region} --platform managed --allow-unauthenticated"
                 }
 
             }

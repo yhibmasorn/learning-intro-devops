@@ -17,9 +17,16 @@ pipeline{
         stage('Build and Push Image'){
             steps{
                 script{
-                    sh "docker build -t ${DOCKER_IMAGE} ."
-                    sh "gcloud auth configure-docker"
-                    sh "docker push ${DOCKER_IMAGE}"
+                    withCredentials([file(credentialsId: 'jenkins-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]){
+                        sh '''
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud auth configure-docker
+                        '''
+
+                        sh "docker build -t ${DOCKER_IMAGE} ."
+                        sh "docker push ${DOCKER_IMAGE}"
+
+                    }
                 }
 
             }

@@ -1,8 +1,10 @@
 pipeline{
     agent any
     environment {
-        DOCKER_IMAGE = 'gcr.io/yhibmasorn/nestsj-api:${BUILD_NUMBER}'
-
+        PROJECT_ID = 'yhibmasorn'
+        DOCKER_IMAGE = 'gcr-yhibmasorn/${PROJECT_ID}/nestsj-api:${BUILD_NUMBER}'
+        REGION = 'asia-southeast1'
+        SERVICE_NAME = 'nestjs-api-service'
     }
 
     stages{
@@ -36,9 +38,16 @@ pipeline{
         stage('Deploy'){
             steps{
                 script{
-                    def serviceName = "NestJS-API-Service"
-                    def region = "us-central1"
-                    sh "gcloud run deploy ${serviceName} --image ${DOCKER_IMAGE} --region ${region} --platform managed --allow-unauthenticated"
+                    withCredentials([file(credentialsId: 'jenkins-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                        sh """
+                        gcloud run deploy ${SERVICE_NAME} \
+                          --image ${DOCKER_IMAGE} \
+                          --platform managed \
+                          --region ${REGION} \
+                          --allow-unauthenticated \
+                          --project ${PROJECT_ID}
+                        """
+                    }
                 }
 
             }

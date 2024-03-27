@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment {
         PROJECT_ID = 'yhibmasorn'
-        DOCKER_IMAGE = 'gcr-yhibmasorn/${PROJECT_ID}/nestsj-api:${BUILD_NUMBER}'
+        DOCKER_IMAGE = 'gcr.io/${PROJECT_ID}/nestsj-api:${BUILD_NUMBER}'
         REGION = 'asia-southeast1'
         SERVICE_NAME = 'nestjs-api-service'
     }
